@@ -1,5 +1,6 @@
 {
     "name": "@dfgpublicidade/node-cache-module",
+    "type": "module",
     "version": "1.0.0",
     "license": "UNLICENSED",
     "main": "src/index.ts",

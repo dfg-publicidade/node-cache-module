@@ -62,4 +62,4 @@ class Cache {
 }
 
 export default Cache;
-export { CacheLevel, ExpressExpeditiousInstance };
+export { CacheLevel };

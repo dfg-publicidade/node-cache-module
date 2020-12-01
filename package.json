@@ -3,7 +3,7 @@
     "type": "module",
     "version": "1.0.0",
     "license": "UNLICENSED",
-    "main": "src/index.ts",
+    "main": "dist/index.js",
     "scripts": {
         "check": "eslint src --ext .ts",
         "compile:clean": "npm run check && gulp install && tsc --project tsconfig.json",
@@ -12,7 +12,7 @@
         "test:all": "npm run test test/**/*.spec.ts test/**/**/*.spec.ts test/**/**/**/*.spec.ts"
     },
     "files": [
-        "src"
+        "dist"
     ],
     "dependencies": {
         "@dfgpublicidade/node-app-module": "git+https://github.com/dfg-publicidade/node-app-module.git",

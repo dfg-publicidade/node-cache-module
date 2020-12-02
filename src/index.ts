@@ -1,9 +1,9 @@
+import App from '@dfgpublicidade/node-app-module';
 import appDebugger from 'debug';
 import expeditousRedis from 'expeditious-engine-redis';
 import { Request, Response } from 'express';
 import expeditious, { ExpeditiousOptions, ExpressExpeditiousInstance } from 'express-expeditious';
 import CacheLevel from './enums/cacheLevel';
-import App from '@dfgpublicidade/node-app-module';
 
 /* Module */
 const debug: appDebugger.IDebugger = appDebugger('api:cache');

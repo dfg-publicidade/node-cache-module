@@ -18,7 +18,7 @@
         "express-expeditious": "^5.1.1"
     },
     "devDependencies": {
-        "@dfgpublicidade/eslint-config": "git+https://github.com/dfg-publicidade/eslint-config.git",
+        "@dfgpublicidade/eslint-config": "git+ssh://git@github.com/dfg-publicidade/eslint-config.git",
         "@typescript-eslint/eslint-plugin": "^4.7.0",
         "@typescript-eslint/eslint-plugin-tslint": "^4.8.0",
         "@typescript-eslint/parser": "^4.7.0",

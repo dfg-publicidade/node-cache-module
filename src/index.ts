@@ -12,7 +12,7 @@ class Cache {
     private static caches: { name: string; level: CacheLevel; instance: ExpressExpeditiousInstance }[] = [];
 
     public static create(app: App, level: CacheLevel, userCache: boolean): ExpressExpeditiousInstance {
-        debug(`Criando cache ${app.info.name}-${level}`);
+        debug(`Creating cache ${app.info.name}-${level}`);
 
         const cacheoptions: ExpeditiousOptions = {
             namespace: `${app.info.name}${level}`,
@@ -35,7 +35,7 @@ class Cache {
 
         const instance: ExpressExpeditiousInstance = expeditious(cacheoptions);
 
-        debug(`Armazenando cache ${app.info.name}-${level}`);
+        debug(`Storing cache ${app.info.name}-${level}`);
 
         Cache.caches.push({
             name: userCache ? `${app.info.name}-${level}-p` : `${app.info.name}-${level}`,
@@ -47,7 +47,7 @@ class Cache {
     }
 
     public static async flush(level: CacheLevel, callback?: () => void): Promise<void> {
-        debug(`Invalidando caches de nível ${level}`);
+        debug(`Invalidating level ${level} cache`);
 
         for (const cache of Cache.caches) {
             if (cache.level === level) {

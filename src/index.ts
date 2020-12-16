@@ -19,16 +19,16 @@ class Cache {
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: true,
             genCacheKey: (req: Request, res: Response): string => {
-                const system: string = req.user ? req.user.identificacao : undefined;
-                const userId: string = req.system ? req.system.id : 'unknown';
+                const system: string = req.system ? req.system.id : 'unknown';
                 const method: string = req.method;
                 const resource: string = req.originalUrl;
 
                 if (userCache) {
-                    return `${app.info.name}-${level}-${system}-${method}-user:${userId}-${resource}`;
+                    const userId: string = req.user ? req.user.identificacao : undefined;
+                    return `${system}-${method}-user:${userId}-${resource}`;
                 }
 
-                return `${app.info.name}-${level}-${system}-${method}-${resource}`;
+                return `${system}-${method}-${resource}`;
             },
             engine: expeditousRedis(app.config)
         };

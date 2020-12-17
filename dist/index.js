@@ -19,7 +19,7 @@ class Cache {
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: true,
             genCacheKey: (req, res) => {
-                const system = req.system ? req.system.identificacao : 'unknown';
+                const system = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
                 const method = req.method;
                 const resource = req.originalUrl;
                 if (userCache) {

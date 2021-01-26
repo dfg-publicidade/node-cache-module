@@ -10,7 +10,7 @@ const express_expeditious_1 = __importDefault(require("express-expeditious"));
 const cacheLevel_1 = __importDefault(require("./enums/cacheLevel"));
 exports.CacheLevel = cacheLevel_1.default;
 /* Module */
-const debug = debug_1.default('api:cache');
+const debug = debug_1.default('module:cache');
 class Cache {
     static create(app, level, userCache) {
         debug(`Creating cache ${app.info.name}-${level}`);

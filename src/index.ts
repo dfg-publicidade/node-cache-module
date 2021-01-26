@@ -6,7 +6,7 @@ import expeditious, { ExpeditiousOptions, ExpressExpeditiousInstance } from 'exp
 import CacheLevel from './enums/cacheLevel';
 
 /* Module */
-const debug: appDebugger.IDebugger = appDebugger('api:cache');
+const debug: appDebugger.IDebugger = appDebugger('module:cache');
 
 class Cache {
     private static caches: { name: string; level: CacheLevel; instance: ExpressExpeditiousInstance }[] = [];

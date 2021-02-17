@@ -15,7 +15,7 @@ class Cache {
         debug(`Creating cache ${app.info.name}-${level}`);
 
         const cacheoptions: ExpeditiousOptions = {
-            namespace: `${app.info.name}${level}`,
+            namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: true,
             genCacheKey: (req: Request, res: Response): string => {

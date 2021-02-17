@@ -15,7 +15,7 @@ class Cache {
     static create(app, level, userCache) {
         debug(`Creating cache ${app.info.name}-${level}`);
         const cacheoptions = {
-            namespace: `${app.info.name}${level}`,
+            namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: true,
             genCacheKey: (req, res) => {

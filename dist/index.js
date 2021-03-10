@@ -13,11 +13,11 @@ exports.CacheLevel = cacheLevel_1.default;
 const debug = debug_1.default('module:cache');
 class Cache {
     static create(app, level, userCache) {
-        debug(`Creating cache ${app.info.name}-${level}`);
+        debug(`Creating cache ${app.info.name} ${level}`);
         const cacheoptions = {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
-            sessionAware: true,
+            sessionAware: false,
             genCacheKey: (req, res) => {
                 const system = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
                 const method = req.method;
@@ -39,16 +39,19 @@ class Cache {
         });
         return instance;
     }
-    static async flush(level, callback) {
+    static async flush(level) {
         debug(`Invalidating level ${level} cache`);
+        const promises = [];
         for (const cache of Cache.caches) {
             if (cache.level === level) {
-                cache.instance.flush(cache.name, callback ? callback : () => {
-                    //
-                });
+                promises.push(new Promise((resolve) => {
+                    cache.instance.flush(undefined, () => {
+                        resolve();
+                    });
+                }));
             }
         }
-        return Promise.resolve();
+        return Promise.all(promises);
     }
 }
 Cache.caches = [];

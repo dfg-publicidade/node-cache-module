@@ -12,12 +12,12 @@ class Cache {
     private static caches: { name: string; level: CacheLevel; instance: ExpressExpeditiousInstance }[] = [];
 
     public static create(app: App, level: CacheLevel, userCache: boolean): ExpressExpeditiousInstance {
-        debug(`Creating cache ${app.info.name}-${level}`);
+        debug(`Creating cache ${app.info.name} ${level}`);
 
         const cacheoptions: ExpeditiousOptions = {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
-            sessionAware: true,
+            sessionAware: false,
             genCacheKey: (req: Request, res: Response): string => {
                 const system: string = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
                 const method: string = req.method;
@@ -46,18 +46,24 @@ class Cache {
         return instance;
     }
 
-    public static async flush(level: CacheLevel, callback?: () => void): Promise<void> {
+    public static async flush(level: CacheLevel): Promise<void[]> {
         debug(`Invalidating level ${level} cache`);
+
+        const promises: Promise<void>[] = [];
 
         for (const cache of Cache.caches) {
             if (cache.level === level) {
-                cache.instance.flush(cache.name, callback ? callback : (): void => {
-                    //
-                });
+                promises.push(new Promise<void>((
+                    resolve: () => void
+                ): void => {
+                    cache.instance.flush(undefined, (): void => {
+                        resolve();
+                    });
+                }));
             }
         }
 
-        return Promise.resolve();
+        return Promise.all(promises);
     }
 }
 

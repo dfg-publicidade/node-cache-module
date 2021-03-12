@@ -100,7 +100,7 @@ describe('index.ts', (): void => {
         });
     });
 
-    it('create / flush', async (): Promise<void> => {
+    it('1. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/');
 
         // eslint-disable-next-line no-magic-numbers
@@ -112,7 +112,7 @@ describe('index.ts', (): void => {
     });
 
 
-    it('create / flush', async (): Promise<void> => {
+    it('2. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/');
 
         // eslint-disable-next-line no-magic-numbers
@@ -125,7 +125,7 @@ describe('index.ts', (): void => {
         count++;
     });
 
-    it('create / flush', async (): Promise<void> => {
+    it('3. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/');
 
         // eslint-disable-next-line no-magic-numbers
@@ -138,7 +138,7 @@ describe('index.ts', (): void => {
         count++;
     });
 
-    it('create / flush', async (): Promise<void> => {
+    it('4. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/user').set('ID', '1');
 
         // eslint-disable-next-line no-magic-numbers
@@ -150,7 +150,7 @@ describe('index.ts', (): void => {
         count++;
     });
 
-    it('create / flush', async (): Promise<void> => {
+    it('5. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/user').set('ID', '2');
 
         // eslint-disable-next-line no-magic-numbers
@@ -164,7 +164,7 @@ describe('index.ts', (): void => {
         await Cache.flush(CacheLevel.L1);
     });
 
-    it('create / flush', async (): Promise<void> => {
+    it('6. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/user').set('anonimous', 'true');
 
         // eslint-disable-next-line no-magic-numbers

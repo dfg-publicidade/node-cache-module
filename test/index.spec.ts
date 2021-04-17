@@ -111,7 +111,6 @@ describe('index.ts', (): void => {
         count++;
     });
 
-
     it('2. create / flush', async (): Promise<void> => {
         const res: ChaiHttp.Response = await chai.request(exp).keepOpen().get('/');
 

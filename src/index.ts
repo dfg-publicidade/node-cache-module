@@ -11,7 +11,24 @@ const debug: appDebugger.IDebugger = appDebugger('module:cache');
 class Cache {
     private static caches: { name: string; level: CacheLevel; instance: ExpressExpeditiousInstance }[] = [];
 
-    public static create(app: App, level: CacheLevel, userCache: boolean): ExpressExpeditiousInstance {
+    public static create(app: App, level: CacheLevel, userCache?: boolean): ExpressExpeditiousInstance {
+        if (!app) {
+            throw new Error('Application was not provided.');
+        }
+        if (!app.config.cache || !app.config.cache.ttl || !app.config.cache.system?.idField) {
+            throw new Error('Cache config. was not provided.');
+        }
+
+        for (const cacheLevel of Object.keys(CacheLevel)) {
+            if (!app.config.cache.ttl[cacheLevel]) {
+                throw new Error('Cache config. was not provided.');
+            }
+        }
+
+        if (!level) {
+            throw new Error('Cache level was not provided.');
+        }
+
         debug(`Creating cache ${app.info.name} ${level}`);
 
         const cacheoptions: ExpeditiousOptions = {
@@ -19,6 +36,10 @@ class Cache {
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
             genCacheKey: (req: Request, res: Response): string => {
+                if (req.system && !req.system[app.config.cache.system.idField]) {
+                    throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
+                }
+
                 const system: string = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
                 const method: string = req.method;
                 const resource: string = req.originalUrl;
@@ -47,6 +68,10 @@ class Cache {
     }
 
     public static async flush(level: CacheLevel): Promise<void[]> {
+        if (!level) {
+            throw new Error('Cache level was not provided.');
+        }
+
         debug(`Invalidating level ${level} cache`);
 
         const promises: Promise<void>[] = [];

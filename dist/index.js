@@ -13,12 +13,30 @@ exports.CacheLevel = cacheLevel_1.default;
 const debug = debug_1.default('module:cache');
 class Cache {
     static create(app, level, userCache) {
+        var _a;
+        if (!app) {
+            throw new Error('Application was not provided.');
+        }
+        if (!app.config.cache || !app.config.cache.ttl || !((_a = app.config.cache.system) === null || _a === void 0 ? void 0 : _a.idField)) {
+            throw new Error('Cache config. was not provided.');
+        }
+        for (const cacheLevel of Object.keys(cacheLevel_1.default)) {
+            if (!app.config.cache.ttl[cacheLevel]) {
+                throw new Error('Cache config. was not provided.');
+            }
+        }
+        if (!level) {
+            throw new Error('Cache level was not provided.');
+        }
         debug(`Creating cache ${app.info.name} ${level}`);
         const cacheoptions = {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
             genCacheKey: (req, res) => {
+                if (req.system && !req.system[app.config.cache.system.idField]) {
+                    throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
+                }
                 const system = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
                 const method = req.method;
                 const resource = req.originalUrl;
@@ -40,6 +58,9 @@ class Cache {
         return instance;
     }
     static async flush(level) {
+        if (!level) {
+            throw new Error('Cache level was not provided.');
+        }
         debug(`Invalidating level ${level} cache`);
         const promises = [];
         for (const cache of Cache.caches) {

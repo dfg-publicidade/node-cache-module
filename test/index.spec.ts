@@ -22,10 +22,10 @@ describe('index.ts', (): void => {
 
         exp.set('port', port);
 
-        httpServer = http.createServer(express);
+        httpServer = http.createServer(exp);
 
         if (!process.env.REDIS_TEST_HOST || !process.env.REDIS_TEST_PASSWORD) {
-            throw new Error('REDIS_TEST_HOST and REDIS_TEST_PASSWORD must be set');
+            throw new Error('REDIS_TEST_HOST and REDIS_TEST_PASSWORD must be set.');
         }
 
         app = new App({

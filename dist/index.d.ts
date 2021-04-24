@@ -5,6 +5,7 @@ declare class Cache {
     private static caches;
     static create(app: App, level: CacheLevel, userCache?: boolean): ExpressExpeditiousInstance;
     static flush(level: CacheLevel): Promise<void[]>;
+    private static creteCacheKeyGenerator;
 }
 export default Cache;
 export { CacheLevel };

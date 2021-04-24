@@ -33,19 +33,7 @@ class Cache {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
-            genCacheKey: (req, res) => {
-                if (req.system && !req.system[app.config.cache.system.idField]) {
-                    throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
-                }
-                const system = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
-                const method = req.method;
-                const resource = req.originalUrl;
-                if (userCache) {
-                    const userId = req.user ? req.user.id : undefined;
-                    return `${system}-${method}-user:${userId}-${resource}`;
-                }
-                return `${system}-${method}-${resource}`;
-            },
+            genCacheKey: this.creteCacheKeyGenerator(app, userCache),
             engine: expeditious_engine_redis_1.default(app.config)
         };
         const instance = express_expeditious_1.default(cacheoptions);
@@ -73,6 +61,21 @@ class Cache {
             }
         }
         return Promise.all(promises);
+    }
+    static creteCacheKeyGenerator(app, userCache) {
+        return (req, res) => {
+            if (req.system && !req.system[app.config.cache.system.idField]) {
+                throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
+            }
+            const system = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
+            const method = req.method;
+            const resource = req.originalUrl;
+            if (userCache) {
+                const userId = req.user ? req.user.id : undefined;
+                return `${system}-${method}-user:${userId}-${resource}`;
+            }
+            return `${system}-${method}-${resource}`;
+        };
     }
 }
 Cache.caches = [];

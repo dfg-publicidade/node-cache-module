@@ -35,22 +35,7 @@ class Cache {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
-            genCacheKey: (req: Request, res: Response): string => {
-                if (req.system && !req.system[app.config.cache.system.idField]) {
-                    throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
-                }
-
-                const system: string = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
-                const method: string = req.method;
-                const resource: string = req.originalUrl;
-
-                if (userCache) {
-                    const userId: string = req.user ? req.user.id : undefined;
-                    return `${system}-${method}-user:${userId}-${resource}`;
-                }
-
-                return `${system}-${method}-${resource}`;
-            },
+            genCacheKey: this.creteCacheKeyGenerator(app, userCache),
             engine: expeditousRedis(app.config)
         };
 
@@ -89,6 +74,25 @@ class Cache {
         }
 
         return Promise.all(promises);
+    }
+
+    private static creteCacheKeyGenerator(app: App, userCache: boolean): ((req: Request, res: Response) => string) {
+        return (req: Request, res: Response): string => {
+            if (req.system && !req.system[app.config.cache.system.idField]) {
+                throw new Error(`System has not identification value: ${app.config.cache.system.idField}.`);
+            }
+
+            const system: string = req.system ? req.system[app.config.cache.system.idField] : 'unknown';
+            const method: string = req.method;
+            const resource: string = req.originalUrl;
+
+            if (userCache) {
+                const userId: string = req.user ? req.user.id : undefined;
+                return `${system}-${method}-user:${userId}-${resource}`;
+            }
+
+            return `${system}-${method}-${resource}`;
+        };
     }
 }
 

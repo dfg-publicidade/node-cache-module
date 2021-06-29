@@ -1,6 +1,5 @@
 import App from '@dfgpublicidade/node-app-module';
 import appDebugger from 'debug';
-import expeditousRedis from 'expeditious-engine-redis';
 import { Request, Response } from 'express';
 import expeditious, { ExpeditiousOptions, ExpressExpeditiousInstance } from 'express-expeditious';
 import CacheLevel from './enums/cacheLevel';
@@ -11,7 +10,7 @@ const debug: appDebugger.IDebugger = appDebugger('module:cache');
 class Cache {
     private static caches: { name: string; level: CacheLevel; instance: ExpressExpeditiousInstance }[] = [];
 
-    public static create(app: App, level: CacheLevel, userCache?: boolean): ExpressExpeditiousInstance {
+    public static create(app: App, level: CacheLevel, engine?: any, userCache?: boolean): ExpressExpeditiousInstance {
         if (!app) {
             throw new Error('Application was not provided.');
         }
@@ -35,9 +34,12 @@ class Cache {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
-            genCacheKey: this.creteCacheKeyGenerator(app, userCache),
-            engine: expeditousRedis(app.config)
+            genCacheKey: this.creteCacheKeyGenerator(app, userCache)
         };
+
+        if (engine) {
+            cacheoptions.engine = engine;
+        }
 
         const instance: ExpressExpeditiousInstance = expeditious(cacheoptions);
 

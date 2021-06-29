@@ -1,5 +1,6 @@
 import App from '@dfgpublicidade/node-app-module';
 import chai, { expect } from 'chai';
+import expeditiousEngineMemory from 'expeditious-engine-memory';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { ExpressExpeditiousInstance } from 'express-expeditious';
 import http from 'http';
@@ -24,10 +25,6 @@ describe('index.ts', (): void => {
 
         httpServer = http.createServer(exp);
 
-        if (!process.env.REDIS_TEST_HOST || !process.env.REDIS_TEST_PASSWORD) {
-            throw new Error('REDIS_TEST_HOST and REDIS_TEST_PASSWORD must be set.');
-        }
-
         app = new App({
             appInfo: {
                 name: 'test',
@@ -44,19 +41,15 @@ describe('index.ts', (): void => {
                         // eslint-disable-next-line no-magic-numbers
                         L2: '5 minutes'
                     }
-                },
-                redis: {
-                    host: process.env.REDIS_TEST_HOST,
-                    password: process.env.REDIS_TEST_PASSWORD
                 }
             },
             connectionName: '',
             db: undefined
         });
 
-        const cacheL1: ExpressExpeditiousInstance = Cache.create(app, CacheLevel.L1, false);
-        Cache.create(app, CacheLevel.L2, false);
-        const cacheL1User: ExpressExpeditiousInstance = Cache.create(app, CacheLevel.L1, true);
+        const cacheL1: ExpressExpeditiousInstance = Cache.create(app, CacheLevel.L1);
+        Cache.create(app, CacheLevel.L2, expeditiousEngineMemory());
+        const cacheL1User: ExpressExpeditiousInstance = Cache.create(app, CacheLevel.L1, undefined, true);
 
         exp.use((req: Request, res: Response, next: NextFunction): void => {
             if (!req.headers.anonimous) {
@@ -69,7 +62,6 @@ describe('index.ts', (): void => {
             }
 
             if (req.headers.misconfigsystem) {
-
                 req.system = {};
                 req.user = {
                     id: req.headers.id
@@ -117,7 +109,7 @@ describe('index.ts', (): void => {
 
     it('1. create', async (): Promise<void> => {
         expect((): void => {
-            Cache.create(undefined, undefined, undefined);
+            Cache.create(undefined, undefined, undefined, undefined);
         }).to.throw('Application was not provided.');
     });
 
@@ -133,7 +125,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache config. was not provided.');
     });
 
@@ -151,7 +143,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache config. was not provided.');
     });
 
@@ -174,7 +166,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache config. was not provided.');
     });
 
@@ -198,7 +190,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache config. was not provided.');
     });
 
@@ -222,7 +214,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache config. was not provided.');
     });
 
@@ -248,7 +240,7 @@ describe('index.ts', (): void => {
         });
 
         expect((): void => {
-            Cache.create(app, undefined, undefined);
+            Cache.create(app, undefined, undefined, undefined);
         }).to.throw('Cache level was not provided.');
     });
 

@@ -5,14 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CacheLevel = void 0;
 const debug_1 = __importDefault(require("debug"));
-const expeditious_engine_redis_1 = __importDefault(require("expeditious-engine-redis"));
 const express_expeditious_1 = __importDefault(require("express-expeditious"));
 const cacheLevel_1 = __importDefault(require("./enums/cacheLevel"));
 exports.CacheLevel = cacheLevel_1.default;
 /* Module */
 const debug = debug_1.default('module:cache');
 class Cache {
-    static create(app, level, userCache) {
+    static create(app, level, engine, userCache) {
         var _a;
         if (!app) {
             throw new Error('Application was not provided.');
@@ -33,9 +32,11 @@ class Cache {
             namespace: app.info.name + level,
             defaultTtl: app.config.cache.ttl[level],
             sessionAware: false,
-            genCacheKey: this.creteCacheKeyGenerator(app, userCache),
-            engine: expeditious_engine_redis_1.default(app.config)
+            genCacheKey: this.creteCacheKeyGenerator(app, userCache)
         };
+        if (engine) {
+            cacheoptions.engine = engine;
+        }
         const instance = express_expeditious_1.default(cacheoptions);
         debug(`Storing cache ${app.info.name}-${level}`);
         Cache.caches.push({

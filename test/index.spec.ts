@@ -42,9 +42,7 @@ describe('index.ts', (): void => {
                         L2: '5 minutes'
                     }
                 }
-            },
-            connectionName: '',
-            db: undefined
+            }
         });
 
         const cacheL1: ExpressExpeditiousInstance = Cache.create(app, CacheLevel.L1);

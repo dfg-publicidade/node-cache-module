@@ -36,9 +36,7 @@ describe('index.ts', (): void => {
                         idField: 'identificacao'
                     },
                     ttl: {
-                        // eslint-disable-next-line no-magic-numbers
-                        L1: '20 seconds',
-                        // eslint-disable-next-line no-magic-numbers
+                        L1: '1 minute',
                         L2: '5 minutes'
                     }
                 }

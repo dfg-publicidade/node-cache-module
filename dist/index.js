@@ -9,7 +9,7 @@ const express_expeditious_1 = __importDefault(require("express-expeditious"));
 const cacheLevel_1 = __importDefault(require("./enums/cacheLevel"));
 exports.CacheLevel = cacheLevel_1.default;
 /* Module */
-const debug = debug_1.default('module:cache');
+const debug = (0, debug_1.default)('module:cache');
 class Cache {
     static create(app, level, engine, userCache) {
         var _a;
@@ -37,7 +37,7 @@ class Cache {
         if (engine) {
             cacheoptions.engine = engine;
         }
-        const instance = express_expeditious_1.default(cacheoptions);
+        const instance = (0, express_expeditious_1.default)(cacheoptions);
         debug(`Storing cache ${app.info.name}-${level}`);
         Cache.caches.push({
             name: userCache ? `${app.info.name}-${level}-p` : `${app.info.name}-${level}`,
